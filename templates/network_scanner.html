@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Scanner réseau{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header bg-success text-white">
+        <h4>Scanner réseau</h4>
+    </div>
+    <div class="card-body">
+        <form method="post" action="{{ url_for('scan_network') }}">
+            <div class="mb-3">
+                <label for="target_ip" class="form-label">Adresse IP cible</label>
+                <input type="text" class="form-control" id="target_ip" name="target_ip" 
+                       placeholder="192.168.1.1" required>
+                <div class="form-text">
+                    Entrez l'adresse IP à scanner (ex: 192.168.1.1, 8.8.8.8)
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-search"></i> Scanner
+            </button>
+        </form>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h5>Informations</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h6>Ports scannés :</h6>
+                <p class="text-muted">21 (FTP), 22 (SSH), 23 (Telnet), 25 (SMTP), 53 (DNS), 80 (HTTP), 110 (POP3), 143 (IMAP), 443 (HTTPS), 993 (IMAPS), 995 (POP3S), 1433 (MSSQL), 3306 (MySQL), 3389 (RDP), 5432 (PostgreSQL), 5900 (VNC), 8080 (HTTP-Alt)</p>
+            </div>
+            <div class="col-md-6">
+                <h6>Niveaux de risque :</h6>
+                <ul class="list-unstyled">
+                    <li><span class="badge bg-success">0-20</span> Faible</li>
+                    <li><span class="badge bg-warning">21-50</span> Moyen</li>
+                    <li><span class="badge bg-danger">51-100</span> Élevé</li>
+                </ul>
+            </div>
+        </div>
+        <div class="alert alert-warning mt-3">
+            <strong>Attention :</strong> N'utilisez ce scanner que sur vos propres systèmes ou avec autorisation explicite.
+        </div>
+    </div>
+</div>
+{% endblock %}

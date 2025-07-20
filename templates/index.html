@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Analyses de logs</h5>
+                <p class="card-text display-6">{{ total_log_analysis }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Scans réseau</h5>
+                <p class="card-text display-6">{{ total_network_scans }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Analyses de malware</h5>
+                <p class="card-text display-6">{{ total_malware_analysis }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                Dernières analyses de logs
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    {% for log in recent_logs %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ log[0]|truncate(20) }}
+                        <span class="badge bg-{{ 'danger' if log[2] > 0 else 'success' }} rounded-pill">{{ log[2] }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                Derniers scans réseau
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    {% for scan in recent_scans %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ scan[0] }}
+                        <span class="badge bg-{{ 'danger' if scan[2] > 50 else 'warning' if scan[2] > 20 else 'success' }} rounded-pill">{{ scan[2] }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                Dernières détections de malware
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    {% for malware in recent_malware %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ malware[0]|truncate(20) }}
+                        <span class="badge bg-{{ 'danger' if malware[2] == 'CRITICAL' else 'warning' if malware[2] == 'HIGH' else 'info' }} rounded-pill">{{ malware[2] }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Analyse de logs{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h4>Analyse de fichiers de log</h4>
+    </div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data" action="{{ url_for('upload_log') }}">
+            <div class="mb-3">
+                <label for="logFile" class="form-label">Sélectionnez un fichier de log</label>
+                <input class="form-control" type="file" id="logFile" name="log_file" required>
+                <div class="form-text">Formats supportés: .log, .txt, etc.</div>
+            </div>
+            <button type="submit" class="btn btn-primary">Analyser</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}Résultats du scan{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header bg-success text-white">
+        <h4>Résultats du scan - {{ target_ip }}</h4>
+    </div>
+    <div class="card-body">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Score de risque</h5>
+                        <h2 class="display-4 {% if results.risk_score > 50 %}text-danger{% elif results.risk_score > 20 %}text-warning{% else %}text-success{% endif %}">
+                            {{ results.risk_score }}
+                        </h2>
+                        <p class="card-text">
+                            {% if results.risk_score > 50 %}
+                                <span class="badge bg-danger">Risque élevé</span>
+                            {% elif results.risk_score > 20 %}
+                                <span class="badge bg-warning">Risque moyen</span>
+                            {% else %}
+                                <span class="badge bg-success">Risque faible</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Ports ouverts</h5>
+                        <h2 class="display-4 text-info">{{ results.open_ports|length }}</h2>
+                        <p class="card-text">Services détectés</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Vulnérabilités</h5>
+                        <h2 class="display-4 text-warning">{{ results.vulnerabilities|length }}</h2>
+                        <p class="card-text">Problèmes détectés</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if results.open_ports %}
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>Ports ouverts</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for port in results.open_ports %}
+                    <div class="col-md-3 mb-2">
+                        <span class="badge bg-primary">{{ port }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if results.vulnerabilities %}
+        <div class="card mb-3">
+            <div class="card-header bg-warning text-dark">
+                <h5>Vulnérabilités détectées</h5>
+            </div>
+            <div class="card-body">
+                {% for vulnerability in results.vulnerabilities %}
+                <div class="alert alert-warning" role="alert">
+                    <i class="fas fa-exclamation-triangle"></i> {{ vulnerability }}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if not results.open_ports and not results.vulnerabilities %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> Aucun port ouvert détecté ou l'hôte ne répond pas.
+        </div>
+        {% endif %}
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5>Recommandations</h5>
+            </div>
+            <div class="card-body">
+                {% if results.risk_score > 50 %}
+                <div class="alert alert-danger">
+                    <strong>Attention :</strong> Ce système présente un risque élevé. Nous recommandons :
+                    <ul>
+                        <li>Fermer les ports non utilisés</li>
+                        <li>Mettre à jour les services exposés</li>
+                        <li>Configurer un pare-feu</li>
+                        <li>Surveiller les tentatives d'accès</li>
+                    </ul>
+                </div>
+                {% elif results.risk_score > 20 %}
+                <div class="alert alert-warning">
+                    <strong>Prudence :</strong> Ce système présente un risque modéré. Vérifiez :
+                    <ul>
+                        <li>La nécessité des services exposés</li>
+                        <li>Les mises à jour de sécurité</li>
+                        <li>La configuration des services</li>
+                    </ul>
+                </div>
+                {% else %}
+                <div class="alert alert-success">
+                    <strong>Bien :</strong> Ce système présente un risque faible. Continuez à :
+                    <ul>
+                        <li>Surveiller régulièrement</li>
+                        <li>Maintenir les mises à jour</li>
+                        <li>Appliquer les bonnes pratiques de sécurité</li>
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="text-center">
+    <a href="{{ url_for('network_scanner_page') }}" class="btn btn-primary">
+        <i class="fas fa-redo"></i> Nouveau scan
+    </a>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">
+        <i class="fas fa-home"></i> Retour au dashboard
+    </a>
+</div>
+{% endblock %}
